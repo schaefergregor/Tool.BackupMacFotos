@@ -12,32 +12,34 @@ def get_target_folder_path(imageSourcePath):
     
     return os.path.join(config_parser.output_dir, modifiedYear, modifiedMonth)
 
-def copy_images(folderPath):
-    images = os.listdir(folderPath)
-    for image in images:
-        imageSourcePath = os.path.join(folderPath, image)
-        if os.path.isdir(imageSourcePath):
-            print("File is a folder => Skip")
-            continue
+def copy_images(image):
+    if os.path.isdir(image):
+        print("File is a folder => Skip")
+        return
 
-        if image == ".DS_Store":
-            print("File is .DS_Store => Skip")
-            continue
+    if image == ".DS_Store":
+        print("File is .DS_Store => Skip")
+        return
 
-        target_folder = get_target_folder_path(imageSourcePath)
-        if not os.path.isdir(target_folder):
-            os.makedirs(target_folder, exist_ok=True)
+    image_filename = os.path.basename(image)
+    target_folder = get_target_folder_path(image)
+    if not os.path.isdir(target_folder):
+        os.makedirs(target_folder, exist_ok=True)
 
-        targetImagePath = os.path.join(target_folder, image)
+    targetImagePath = os.path.join(target_folder, image_filename)
+    shutil.copyfile(image, targetImagePath)
 
-        print(f'Begin copy file {imageSourcePath} to {target_folder}')
-        shutil.copyfile(imageSourcePath, targetImagePath)
+def collect_images():
+    images = []
+    for dirpath, _, filenames in os.walk(config_parser.input_dir):
+        for filename in filenames:
+            images.append(os.path.join(dirpath, filename))
+    return images
 
 def initialize():
-    image_folders = os.listdir(config_parser.input_dir)
-    for folder in image_folders:
-        folderPath = os.path.join(config_parser.input_dir, folder)
-        if not os.path.isdir(folderPath):
-            continue
+    images = collect_images()
 
-        copy_images(folderPath)
+    print(f'Begin copy amount of {len(images)} to target folder.')
+    for index, image in enumerate(images):
+        print(f'Copy image {str(index+1)} / {str(len(images))}.')
+        copy_images(image)
