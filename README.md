@@ -8,15 +8,18 @@ Keep in mind, I do not check for existing space or something else. This tool is 
 I use this tool do handle backups of my photos on external drives with my common folder structure.
 
 ## Go running
+
 ```bash
 main.py -i <inputFolder> -o <outputFolder>
 ```
 
-Notes: 
+### Notes
+
 - By default the Photos library is a file named `Photos Library.photoslibrary`
 - It is located in `/Users/$user/Pictures` or  `~/Pictures`
+- Original quality of images is in a subfolder called `originals`
 - Output folder can be an external drive or what else
-
+- Final path could be: `/Users/$user/Pictures/Photos Library.photoslibrary/originals`
 
 ## Folder structure
 
@@ -34,6 +37,6 @@ Notes:
 ------MONTH (XX)
 ```
 
-
 ## Future stuff
+
 1. Add progress bar

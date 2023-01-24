@@ -1,18 +1,29 @@
+"""
+Module for image copy.
+"""
 import os
 import time
 import shutil
-import config_parser
+import argument_parser
 
-def get_target_folder_path(imageSourcePath):
-    modifiedTime = os.path.getmtime(imageSourcePath)
-    modifiedTimeAsTime = time.ctime(modifiedTime)
-    modifiedTimestamp = time.strptime(modifiedTimeAsTime)
-    modifiedYear = time.strftime("%Y", modifiedTimestamp)
-    modifiedMonth = time.strftime("%m", modifiedTimestamp)
+
+def get_target_folder_path(image_path):
+    """
+    Gets the new folder name.
+    """
+    last_modification_time = os.path.getmtime(image_path)
+    last_modification_time_in_seconds = time.ctime(last_modification_time)
+    last_modification_time_timestamp = time.strptime(last_modification_time_in_seconds)
+    last_modification_time_year = time.strftime("%Y", last_modification_time_timestamp)
+    last_modification_time_month = time.strftime("%m", last_modification_time_timestamp)
     
-    return os.path.join(config_parser.output_dir, modifiedYear, modifiedMonth)
+    return os.path.join(argument_parser.OUTPUT_DIR, last_modification_time_year, last_modification_time_month)
+
 
 def copy_images(image):
+    """
+    Copies image to the given output dir.
+    """
     if os.path.isdir(image):
         print("File is a folder => Skip")
         return
@@ -26,17 +37,25 @@ def copy_images(image):
     if not os.path.isdir(target_folder):
         os.makedirs(target_folder, exist_ok=True)
 
-    targetImagePath = os.path.join(target_folder, image_filename)
-    shutil.copyfile(image, targetImagePath)
+    target_image_path = os.path.join(target_folder, image_filename)
+    shutil.copyfile(image, target_image_path)
+
 
 def collect_images():
+    """
+    Collects all images in the given input dir.
+    """
     images = []
-    for dirpath, _, filenames in os.walk(config_parser.input_dir):
+    for dirpath, _, filenames in os.walk(argument_parser.INPUT_DIR):
         for filename in filenames:
             images.append(os.path.join(dirpath, filename))
     return images
 
+
 def initialize():
+    """
+    Initializes the image copy.
+    """
     images = collect_images()
 
     print(f'Begin copy amount of {len(images)} to target folder.')
