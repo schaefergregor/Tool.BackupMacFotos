@@ -36,4 +36,4 @@ Notes:
 
 
 ## Future stuff
-1. Add progress
+1. Add progress bar
