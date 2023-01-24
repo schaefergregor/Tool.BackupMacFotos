@@ -33,3 +33,7 @@ Notes:
 ------MONTH (XX)
 ------MONTH (XX)
 ```
+
+
+## Future stuff
+1. Add progress
